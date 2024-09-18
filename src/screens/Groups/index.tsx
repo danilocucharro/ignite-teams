@@ -31,6 +31,7 @@ export function Groups() {
         ListEmptyComponent={(
           <ListEmpty message="Voce ainda nao tem grupos criados." />
         )}
+        showsVerticalScrollIndicator={false}
       />
 
       <Button 
