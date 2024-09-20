@@ -1,5 +1,5 @@
 import { Alert, FlatList, TextInput } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { useEffect, useState, useRef } from "react";
 
 import { Header } from "@components/Header";
@@ -15,6 +15,7 @@ import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
 import { addPlayerByGroup } from "@storage/player/addPlayerByGroup";
 import { getPlayersByGroupAndTeam } from "@storage/player/getPlayersByGroupAndTeam";
 import { deletePlayersByGroup } from "@storage/player/deletePlayerByGroup";
+import { deleteGroup } from "@storage/group/deleteGroup";
 
 import { AppError } from "@utils/AppError";
 
@@ -30,6 +31,8 @@ export function Players() {
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([])
   
   const newPlayerNameInputRef = useRef<TextInput>(null)
+
+  const navigation = useNavigation()
 
   const route = useRoute()
   const { group } = route.params as RouteParams
@@ -76,9 +79,30 @@ export function Players() {
       fetchPlayersByTeam()
 
     } catch (error) {
-      throw error
       console.log(error)
       Alert.alert('Remover', 'Nao foi possivel remover o player')
+    }
+  }
+
+  async function handleRemoveGroup() {
+    Alert.alert(
+      'Remover',
+      'Deseja remover o grupo?',
+      [
+        { text: 'Nao', style: 'cancel' },
+        { text: 'Sim', onPress: () => removeGroup()}
+      ]
+    )
+  }
+
+  async function removeGroup() {
+    try {
+      await deleteGroup(group)
+      navigation.navigate('groups')
+
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Remover', 'Nao foi possivel remover o grupo')
     }
   }
 
@@ -153,6 +177,7 @@ export function Players() {
       <Button 
         title="Desfazer Turma"
         variant="SECONDARY"
+        onPress={handleRemoveGroup}
       />
     </Container>
   )
