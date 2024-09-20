@@ -54,7 +54,7 @@ export function NewGroup() {
         />
 
         <Button 
-          title="Criar"
+          title="Adicionar Turma"
           style={{marginTop: 26}}
           onPress={handleCreateNewGroup}
         />
